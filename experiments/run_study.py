@@ -42,13 +42,19 @@ def _mean_curve(runs):
     return curve
 
 
-def matched_compute_control(*, seed_examples, eval_examples, steps, ft_steps, lr, seed):
-    """Train on the fixed gold seed only, eval every ``ft_steps`` as a fake round."""
+def matched_compute_control(*, seed_examples, eval_examples, rounds, ft_steps,
+                            init_steps, lr, seed):
+    """Train on the fixed gold seed only, matching STaR's per-round step budget.
+
+    Round 0 uses ``init_steps`` (same as STaR's seed-only baseline); rounds
+    1..``rounds`` each add ``ft_steps`` — so control round *r* has seen exactly
+    the same number of gradient steps as STaR round *r*, isolating the effect of
+    *what data* those steps trained on (frozen seed vs self-generated chains).
+    """
     model = TinyTransformer()
     gold = [(ex, ex.cot()) for ex in seed_examples]
-    rounds = max(1, steps // ft_steps)
     curve = []
-    sft_pairs(model, gold, steps=ft_steps, lr=lr, seed=seed)
+    sft_pairs(model, gold, steps=init_steps, lr=lr, seed=seed)
     m = evaluate(model, eval_examples)
     curve.append({"round": 0, "answer_acc": m["answer_acc"], "cot_acc": m["cot_acc"]})
     for r in range(1, rounds + 1):
@@ -76,8 +82,8 @@ def run_study(seeds=(0, 1, 2), rounds=6, out="results/star.json"):
     for s in seeds:
         seed_ex, _, ev = make_split(s, n_seed, n_pool, n_eval)
         control.append(matched_compute_control(seed_examples=seed_ex, eval_examples=ev,
-                                               steps=400 + rounds * 300, ft_steps=300,
-                                               lr=3e-3, seed=s))
+                                               rounds=rounds, ft_steps=300,
+                                               init_steps=400, lr=3e-3, seed=s))
 
     print("== ablation keep=cot ==")
     cot_runs = []
