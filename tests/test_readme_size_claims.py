@@ -45,3 +45,16 @@ def test_readme_parameter_claim_matches_the_artifact():
     for k in claimed:
         assert abs(k * 1000 - actual) / actual <= 0.05, (
             f"README says ~{k}k parameters, star.json records {actual:,}")
+
+
+def test_readme_names_the_std_convention_the_tables_use():
+    """`+/-` is ambiguous unless the file says which divisor produced it.
+
+    The published spreads are the population standard deviation over seeds, so the
+    README has to use that word: a reader who recomputed the other convention would
+    land on a different number and conclude the tables were wrong.
+    """
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert re.search("population[^.]{0,60}standard\\s+deviation", readme), (
+        "the README no longer states which standard-deviation convention its "
+        "`+/-` columns use")

@@ -13,7 +13,9 @@ committed file with **one** field differing each time — `runtime_sec` (1709s a
 1514s against the published 914s, both while the machine was busy) — while every
 accuracy, curve and count came out identical. CPU float reduction order depends
 on the thread count and the torch build, so that caveat is part of what "bit-exact"
-means here.
+means here. Every `±` in this file is the **population** standard deviation over the
+seeded runs (`statistics.pstdev`, divided by n), because these three seeds are the whole
+repetition, not a sample drawn from a larger pool of runs.
 
 ![ci](https://github.com/Lesereingrape/starlab/actions/workflows/ci.yml/badge.svg)
 
