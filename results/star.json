@@ -10,113 +10,160 @@
     "n_pool": 1000,
     "n_eval": 1000,
     "k": 8,
+    "sweep_seed_sizes": [
+      30,
+      60,
+      120,
+      240,
+      480
+    ],
+    "sweep_rounds": 3,
     "params": 103055
   },
   "main": {
     "curve": [
       {
         "round": 0,
-        "answer_mean": 0.2763,
-        "answer_std": 0.2056,
-        "cot_mean": 0.2763,
+        "answer_mean": 0.065,
+        "answer_std": 0.0298,
+        "cot_mean": 0.0647,
         "train_pairs_mean": 240.0
       },
       {
         "round": 1,
-        "answer_mean": 0.4713,
-        "answer_std": 0.2809,
-        "cot_mean": 0.4703,
-        "train_pairs_mean": 604.3
+        "answer_mean": 0.0993,
+        "answer_std": 0.0494,
+        "cot_mean": 0.0993,
+        "train_pairs_mean": 340.3
       },
       {
         "round": 2,
-        "answer_mean": 0.6437,
-        "answer_std": 0.1991,
-        "cot_mean": 0.6437,
-        "train_pairs_mean": 821.7
+        "answer_mean": 0.182,
+        "answer_std": 0.1217,
+        "cot_mean": 0.1813,
+        "train_pairs_mean": 430.3
       },
       {
         "round": 3,
-        "answer_mean": 0.8187,
-        "answer_std": 0.0964,
-        "cot_mean": 0.8187,
-        "train_pairs_mean": 998.3
+        "answer_mean": 0.3227,
+        "answer_std": 0.2099,
+        "cot_mean": 0.321,
+        "train_pairs_mean": 546.3
       },
       {
         "round": 4,
-        "answer_mean": 0.888,
-        "answer_std": 0.0457,
-        "cot_mean": 0.888,
-        "train_pairs_mean": 1108.7
+        "answer_mean": 0.464,
+        "answer_std": 0.314,
+        "cot_mean": 0.4627,
+        "train_pairs_mean": 691.3
       },
       {
         "round": 5,
-        "answer_mean": 0.907,
-        "answer_std": 0.0295,
-        "cot_mean": 0.9067,
-        "train_pairs_mean": 1139.7
+        "answer_mean": 0.546,
+        "answer_std": 0.3285,
+        "cot_mean": 0.5437,
+        "train_pairs_mean": 803.0
       },
       {
         "round": 6,
-        "answer_mean": 0.923,
-        "answer_std": 0.0159,
-        "cot_mean": 0.923,
-        "train_pairs_mean": 1155.3
+        "answer_mean": 0.582,
+        "answer_std": 0.3266,
+        "cot_mean": 0.581,
+        "train_pairs_mean": 862.7
       }
     ],
-    "start": 0.2763,
-    "end": 0.923,
-    "gain": 0.6467
+    "start": 0.065,
+    "start_per_seed": [
+      0.029,
+      0.064,
+      0.102
+    ],
+    "end": 0.582,
+    "end_per_seed": [
+      0.136,
+      0.701,
+      0.909
+    ],
+    "per_seed": {
+      "0": [
+        0.029,
+        0.035,
+        0.041,
+        0.07,
+        0.083,
+        0.106,
+        0.136
+      ],
+      "1": [
+        0.064,
+        0.108,
+        0.167,
+        0.314,
+        0.457,
+        0.637,
+        0.701
+      ],
+      "2": [
+        0.102,
+        0.155,
+        0.338,
+        0.584,
+        0.852,
+        0.895,
+        0.909
+      ]
+    },
+    "gain": 0.517
   },
   "control_matched_compute": {
     "curve": [
       {
         "round": 0,
-        "answer_mean": 0.2923,
-        "answer_std": 0.1947,
-        "cot_mean": 0.2923,
+        "answer_mean": 0.065,
+        "answer_std": 0.0298,
+        "cot_mean": 0.0647,
         "train_pairs_mean": null
       },
       {
         "round": 1,
-        "answer_mean": 0.3833,
-        "answer_std": 0.2049,
-        "cot_mean": 0.3833,
+        "answer_mean": 0.073,
+        "answer_std": 0.0286,
+        "cot_mean": 0.073,
         "train_pairs_mean": null
       },
       {
         "round": 2,
-        "answer_mean": 0.4473,
-        "answer_std": 0.234,
-        "cot_mean": 0.4473,
+        "answer_mean": 0.0793,
+        "answer_std": 0.0325,
+        "cot_mean": 0.079,
         "train_pairs_mean": null
       },
       {
         "round": 3,
-        "answer_mean": 0.4693,
-        "answer_std": 0.2466,
-        "cot_mean": 0.469,
+        "answer_mean": 0.0993,
+        "answer_std": 0.0525,
+        "cot_mean": 0.099,
         "train_pairs_mean": null
       },
       {
         "round": 4,
-        "answer_mean": 0.476,
-        "answer_std": 0.2388,
-        "cot_mean": 0.476,
+        "answer_mean": 0.0943,
+        "answer_std": 0.044,
+        "cot_mean": 0.094,
         "train_pairs_mean": null
       },
       {
         "round": 5,
-        "answer_mean": 0.4817,
-        "answer_std": 0.2549,
-        "cot_mean": 0.4817,
+        "answer_mean": 0.1027,
+        "answer_std": 0.0465,
+        "cot_mean": 0.1023,
         "train_pairs_mean": null
       },
       {
         "round": 6,
-        "answer_mean": 0.5183,
-        "answer_std": 0.2586,
-        "cot_mean": 0.5183,
+        "answer_mean": 0.1053,
+        "answer_std": 0.0451,
+        "cot_mean": 0.105,
         "train_pairs_mean": null
       }
     ]
@@ -125,52 +172,52 @@
     "curve": [
       {
         "round": 0,
-        "answer_mean": 0.2923,
-        "answer_std": 0.1947,
-        "cot_mean": 0.2923,
+        "answer_mean": 0.065,
+        "answer_std": 0.0298,
+        "cot_mean": 0.0647,
         "train_pairs_mean": 240.0
       },
       {
         "round": 1,
-        "answer_mean": 0.569,
-        "answer_std": 0.2276,
-        "cot_mean": 0.5683,
-        "train_pairs_mean": 647.3
+        "answer_mean": 0.1073,
+        "answer_std": 0.058,
+        "cot_mean": 0.1073,
+        "train_pairs_mean": 340.0
       },
       {
         "round": 2,
-        "answer_mean": 0.783,
-        "answer_std": 0.1478,
-        "cot_mean": 0.783,
-        "train_pairs_mean": 911.7
+        "answer_mean": 0.1907,
+        "answer_std": 0.138,
+        "cot_mean": 0.1907,
+        "train_pairs_mean": 427.7
       },
       {
         "round": 3,
-        "answer_mean": 0.8867,
-        "answer_std": 0.0819,
-        "cot_mean": 0.8867,
-        "train_pairs_mean": 1080.7
+        "answer_mean": 0.3583,
+        "answer_std": 0.2441,
+        "cot_mean": 0.3577,
+        "train_pairs_mean": 553.0
       },
       {
         "round": 4,
-        "answer_mean": 0.9207,
-        "answer_std": 0.0417,
-        "cot_mean": 0.9207,
-        "train_pairs_mean": 1152.3
+        "answer_mean": 0.4677,
+        "answer_std": 0.3091,
+        "cot_mean": 0.4677,
+        "train_pairs_mean": 703.7
       },
       {
         "round": 5,
-        "answer_mean": 0.9287,
-        "answer_std": 0.0358,
-        "cot_mean": 0.9287,
-        "train_pairs_mean": 1169.0
+        "answer_mean": 0.501,
+        "answer_std": 0.3055,
+        "cot_mean": 0.501,
+        "train_pairs_mean": 786.0
       },
       {
         "round": 6,
-        "answer_mean": 0.935,
-        "answer_std": 0.0271,
-        "cot_mean": 0.935,
-        "train_pairs_mean": 1173.3
+        "answer_mean": 0.572,
+        "answer_std": 0.3146,
+        "cot_mean": 0.5713,
+        "train_pairs_mean": 843.3
       }
     ]
   },
@@ -178,156 +225,225 @@
     "0.7": [
       {
         "round": 0,
-        "answer_mean": 0.3695,
-        "answer_std": 0.1975,
-        "cot_mean": 0.3695,
+        "answer_mean": 0.065,
+        "answer_std": 0.0298,
+        "cot_mean": 0.0647,
         "train_pairs_mean": 240.0
       },
       {
         "round": 1,
-        "answer_mean": 0.7065,
-        "answer_std": 0.1555,
-        "cot_mean": 0.7065,
-        "train_pairs_mean": 716.5
+        "answer_mean": 0.1,
+        "answer_std": 0.0604,
+        "cot_mean": 0.0997,
+        "train_pairs_mean": 325.0
       },
       {
         "round": 2,
-        "answer_mean": 0.8735,
-        "answer_std": 0.0445,
-        "cot_mean": 0.8735,
-        "train_pairs_mean": 1026.0
+        "answer_mean": 0.177,
+        "answer_std": 0.1107,
+        "cot_mean": 0.177,
+        "train_pairs_mean": 410.7
       },
       {
         "round": 3,
-        "answer_mean": 0.923,
-        "answer_std": 0.01,
-        "cot_mean": 0.923,
-        "train_pairs_mean": 1135.5
+        "answer_mean": 0.2643,
+        "answer_std": 0.1823,
+        "cot_mean": 0.2643,
+        "train_pairs_mean": 510.0
       },
       {
         "round": 4,
-        "answer_mean": 0.9515,
-        "answer_std": 0.0085,
-        "cot_mean": 0.9515,
-        "train_pairs_mean": 1179.5
+        "answer_mean": 0.3673,
+        "answer_std": 0.2582,
+        "cot_mean": 0.3673,
+        "train_pairs_mean": 622.0
       },
       {
         "round": 5,
-        "answer_mean": 0.961,
-        "answer_std": 0.001,
-        "cot_mean": 0.961,
-        "train_pairs_mean": 1201.5
+        "answer_mean": 0.4767,
+        "answer_std": 0.3107,
+        "cot_mean": 0.4767,
+        "train_pairs_mean": 711.3
       },
       {
         "round": 6,
-        "answer_mean": 0.964,
-        "answer_std": 0.003,
-        "cot_mean": 0.964,
-        "train_pairs_mean": 1208.5
+        "answer_mean": 0.5373,
+        "answer_std": 0.3303,
+        "cot_mean": 0.537,
+        "train_pairs_mean": 791.0
       }
     ],
     "1.0": [
       {
         "round": 0,
-        "answer_mean": 0.3445,
-        "answer_std": 0.2225,
-        "cot_mean": 0.3445,
+        "answer_mean": 0.065,
+        "answer_std": 0.0298,
+        "cot_mean": 0.0647,
         "train_pairs_mean": 240.0
       },
       {
         "round": 1,
-        "answer_mean": 0.547,
-        "answer_std": 0.319,
-        "cot_mean": 0.5465,
-        "train_pairs_mean": 688.0
+        "answer_mean": 0.0993,
+        "answer_std": 0.0494,
+        "cot_mean": 0.0993,
+        "train_pairs_mean": 340.3
       },
       {
         "round": 2,
-        "answer_mean": 0.6625,
-        "answer_std": 0.2585,
-        "cot_mean": 0.66,
-        "train_pairs_mean": 897.0
+        "answer_mean": 0.182,
+        "answer_std": 0.1217,
+        "cot_mean": 0.1813,
+        "train_pairs_mean": 430.3
       },
       {
         "round": 3,
-        "answer_mean": 0.7615,
-        "answer_std": 0.1775,
-        "cot_mean": 0.7595,
-        "train_pairs_mean": 990.0
+        "answer_mean": 0.3227,
+        "answer_std": 0.2099,
+        "cot_mean": 0.321,
+        "train_pairs_mean": 546.3
       },
       {
         "round": 4,
-        "answer_mean": 0.851,
-        "answer_std": 0.094,
-        "cot_mean": 0.846,
-        "train_pairs_mean": 1060.5
+        "answer_mean": 0.464,
+        "answer_std": 0.314,
+        "cot_mean": 0.4627,
+        "train_pairs_mean": 691.3
       },
       {
         "round": 5,
-        "answer_mean": 0.9005,
-        "answer_std": 0.0445,
-        "cot_mean": 0.8955,
-        "train_pairs_mean": 1128.5
+        "answer_mean": 0.546,
+        "answer_std": 0.3285,
+        "cot_mean": 0.5437,
+        "train_pairs_mean": 803.0
       },
       {
         "round": 6,
-        "answer_mean": 0.9145,
-        "answer_std": 0.0305,
-        "cot_mean": 0.909,
-        "train_pairs_mean": 1146.5
+        "answer_mean": 0.582,
+        "answer_std": 0.3266,
+        "cot_mean": 0.581,
+        "train_pairs_mean": 862.7
       }
     ],
     "1.3": [
       {
         "round": 0,
-        "answer_mean": 0.3445,
-        "answer_std": 0.2225,
-        "cot_mean": 0.3445,
+        "answer_mean": 0.065,
+        "answer_std": 0.0298,
+        "cot_mean": 0.0647,
         "train_pairs_mean": 240.0
       },
       {
         "round": 1,
-        "answer_mean": 0.573,
-        "answer_std": 0.33,
-        "cot_mean": 0.5715,
-        "train_pairs_mean": 707.0
+        "answer_mean": 0.1137,
+        "answer_std": 0.0733,
+        "cot_mean": 0.1127,
+        "train_pairs_mean": 352.0
       },
       {
         "round": 2,
-        "answer_mean": 0.645,
-        "answer_std": 0.293,
-        "cot_mean": 0.6425,
-        "train_pairs_mean": 916.0
+        "answer_mean": 0.2277,
+        "answer_std": 0.1676,
+        "cot_mean": 0.227,
+        "train_pairs_mean": 461.3
       },
       {
         "round": 3,
-        "answer_mean": 0.737,
-        "answer_std": 0.221,
-        "cot_mean": 0.734,
-        "train_pairs_mean": 1003.5
+        "answer_mean": 0.363,
+        "answer_std": 0.2625,
+        "cot_mean": 0.3617,
+        "train_pairs_mean": 605.0
       },
       {
         "round": 4,
-        "answer_mean": 0.847,
-        "answer_std": 0.114,
-        "cot_mean": 0.843,
-        "train_pairs_mean": 1083.0
+        "answer_mean": 0.4697,
+        "answer_std": 0.322,
+        "cot_mean": 0.4673,
+        "train_pairs_mean": 739.3
       },
       {
         "round": 5,
-        "answer_mean": 0.906,
-        "answer_std": 0.072,
-        "cot_mean": 0.903,
-        "train_pairs_mean": 1127.0
+        "answer_mean": 0.527,
+        "answer_std": 0.3282,
+        "cot_mean": 0.525,
+        "train_pairs_mean": 825.0
       },
       {
         "round": 6,
-        "answer_mean": 0.934,
-        "answer_std": 0.048,
-        "cot_mean": 0.93,
-        "train_pairs_mean": 1165.5
+        "answer_mean": 0.5747,
+        "answer_std": 0.3343,
+        "cot_mean": 0.572,
+        "train_pairs_mean": 869.3
       }
     ]
   },
-  "runtime_sec": 565.7
+  "seed_set_sweep": [
+    {
+      "n_seed": 30,
+      "rounds": 3,
+      "start_mean": 0.0123,
+      "final_mean": 0.014,
+      "final_std": 0.0041,
+      "per_seed": [
+        0.019,
+        0.009,
+        0.014
+      ]
+    },
+    {
+      "n_seed": 60,
+      "rounds": 3,
+      "start_mean": 0.0203,
+      "final_mean": 0.0237,
+      "final_std": 0.0068,
+      "per_seed": [
+        0.021,
+        0.017,
+        0.033
+      ]
+    },
+    {
+      "n_seed": 120,
+      "rounds": 3,
+      "start_mean": 0.0193,
+      "final_mean": 0.028,
+      "final_std": 0.0022,
+      "per_seed": [
+        0.027,
+        0.031,
+        0.026
+      ]
+    },
+    {
+      "n_seed": 240,
+      "rounds": 3,
+      "start_mean": 0.065,
+      "final_mean": 0.3227,
+      "final_std": 0.2099,
+      "per_seed": [
+        0.07,
+        0.314,
+        0.584
+      ]
+    },
+    {
+      "n_seed": 480,
+      "rounds": 3,
+      "start_mean": 0.729,
+      "final_mean": 0.9917,
+      "final_std": 0.0074,
+      "per_seed": [
+        0.993,
+        1.0,
+        0.982
+      ]
+    }
+  ],
+  "environment": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "torch": "2.14.0+cpu",
+    "threads": 8,
+    "device": "cpu"
+  },
+  "runtime_sec": 913.9
 }

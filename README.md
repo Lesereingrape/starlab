@@ -1,11 +1,18 @@
 # starlab — STaR self-improvement, made small enough to audit
 
 A compact, **CPU-only** reproduction of the [STaR](https://arxiv.org/abs/2203.14465)
-/ rejection-sampling-fine-tuning idea: a ~100k-parameter transformer bootstraps
-its own reasoning by **generating candidate solutions, keeping only the ones a
-verifier proves correct, and fine-tuning on them** — round after round. No GPU, no
+/ rejection-sampling-fine-tuning idea: a ~600-line, ~100k-parameter transformer
+bootstraps its own reasoning by **generating candidate solutions, keeping only the
+ones a verifier proves correct, and fine-tuning on them** — round after round.
+No GPU, no
 API keys, no downloaded weights. Every number in this README is produced by
-`python experiments/run_study.py` on a laptop in a few minutes.
+`python experiments/run_study.py`, which took 15-18 minutes on the 8-thread laptop
+these numbers come from. The artifact records that environment (Python, torch,
+thread count), and a second run inside it reproduced the committed file with **one**
+field differing — `runtime_sec`, 914s vs 1709s, because the machine was busy — while
+every accuracy, curve and count came out identical. CPU float reduction order depends
+on the thread count and the torch build, so that caveat is part of what "bit-exact"
+means here.
 
 ![ci](https://github.com/Lesereingrape/starlab/actions/workflows/ci.yml/badge.svg)
 
@@ -59,10 +66,20 @@ unlocks more — the classic bootstrap.
 ```bash
 python -m pip install -e .            # only dependency is torch (CPU build is fine)
 
-starlab quick --seed 0 --rounds 4     # one ~60s run, prints the accuracy curve
-starlab study                          # full multi-seed study -> results/star.json
-python experiments/make_report.py      # rebuild README tables from the JSON
+starlab quick --seed 0                # one seed of the published experiment: same
+                                      # 240/1000/1000 split, same six rounds (~40s here)
+starlab study                         # full multi-seed study + control + ablations
+python experiments/run_study.py       # the same thing, writing results/star.json
+python experiments/run_study.py --out /tmp/again.json   # rerun to diff it field for field
+python experiments/make_report.py --write   # rewrite the README tables from the JSON
 ```
+
+`quick` deliberately runs the *published* configuration rather than a smaller one, so
+its curve is directly comparable with the tables below: `starlab quick --seed 2`
+prints 10.2% → 15.5% → 33.8% → 58.4% → 85.2% → 89.5% → 90.9%, which is the `seed 2`
+row of the per-seed table character for character. Beware which seed you pick: in
+this study **seed 0 is the run that never bootstraps** (2.9% → 13.6%). Both are real
+results, and the per-seed table shows all three.
 
 ## Results
 
@@ -74,79 +91,133 @@ cannot drift from the committed data.
 - model parameters: **103,055**
 - seed / pool / eval sizes: 240 / 1000 / 1000
 - drafts per prompt per round: 8; rounds: 6; seeds: 0, 1, 2
+- measured under: Python 3.13.7 on Windows-11-10.0.26200-SP0, torch 2.14.0+cpu, 8 CPU threads, cpu
 
 ### Held-out answer accuracy vs STaR round (mean over 3 seeds)
 
 | round | train pairs | answer acc (mean) | std | carry-correct (mean) |
 |------:|------------:|-------------------:|----:|---------------------:|
-| 0 | 240 | 27.6% | 0.206 | 27.6% |
-| 1 | 604 | 47.1% | 0.281 | 47.0% |
-| 2 | 822 | 64.4% | 0.199 | 64.4% |
-| 3 | 998 | 81.9% | 0.096 | 81.9% |
-| 4 | 1109 | 88.8% | 0.046 | 88.8% |
-| 5 | 1140 | 90.7% | 0.029 | 90.7% |
-| 6 | 1155 | 92.3% | 0.016 | 92.3% |
+| 0 | 240 | 6.5% | 0.030 | 6.5% |
+| 1 | 340 | 9.9% | 0.049 | 9.9% |
+| 2 | 430 | 18.2% | 0.122 | 18.1% |
+| 3 | 546 | 32.3% | 0.210 | 32.1% |
+| 4 | 691 | 46.4% | 0.314 | 46.3% |
+| 5 | 803 | 54.6% | 0.329 | 54.4% |
+| 6 | 863 | 58.2% | 0.327 | 58.1% |
 
-Overall gain: **27.6% → 92.3%** (+64.7 pts). Note the seed-to-seed std collapsing
-from 0.21 to 0.02: independent runs converge to the same near-ceiling behavior.
+Overall gain: **6.5% → 58.2%** (+51.7 pts). The seed-to-seed std grows
+from 0.03 to 0.33, so the runs move apart: the loop compounds small early differences instead of smoothing them.
+
+### The same curve, seed by seed
+
+| seed | round 0 | round 1 | round 2 | round 3 | round 4 | round 5 | round 6 |
+|-----:|-------:-------:-------:-------:-------:-------:-------:|
+| 0 | 2.9% | 3.5% | 4.1% | 7.0% | 8.3% | 10.6% | 13.6% |
+| 1 | 6.4% | 10.8% | 16.7% | 31.4% | 45.7% | 63.7% | 70.1% |
+| 2 | 10.2% | 15.5% | 33.8% | 58.4% | 85.2% | 89.5% | 90.9% |
+
+Seed 2 bootstraps past 80%; seeds 0, 1 never clear the
+threshold where round-to-round acceptance starts compounding. So the mean table above is a
+mixture of two outcomes, not one noisy outcome — reporting only the mean would hide which
+seeds fail.
+Round-0 accuracy per seed (seeds 0/1/2) is 2.9% / 6.4% / 10.2%, a **7.3-pt** range before the loop runs at all.
 
 ### STaR vs matched-compute control (frozen seed, same gradient steps)
 
 | round | STaR answer acc | control answer acc |
 |------:|----------------:|-------------------:|
-| 0 | 27.6% | 29.2% |
-| 1 | 47.1% | 38.3% |
-| 2 | 64.4% | 44.7% |
-| 3 | 81.9% | 46.9% |
-| 4 | 88.8% | 47.6% |
-| 5 | 90.7% | 48.2% |
-| 6 | 92.3% | 51.8% |
+| 0 | 6.5% | 6.5% |
+| 1 | 9.9% | 7.3% |
+| 2 | 18.2% | 7.9% |
+| 3 | 32.3% | 9.9% |
+| 4 | 46.4% | 9.4% |
+| 5 | 54.6% | 10.3% |
+| 6 | 58.2% | 10.5% |
 
 Both start from the same seed-only baseline; the control keeps training on the
-*frozen* seed for the *same number of steps* and creeps to ~52%. STaR more than
-doubles it. The gap is the self-generated verified data, not extra compute.
+*frozen* seed for the *same number of steps* and finishes at 10.5%,
+against 58.2% for STaR — **5.53x** the accuracy for the same compute.
+The gap is the self-generated verified data, not extra gradient steps.
 
 ### Keep-criterion ablation (final-answer vs full carry chain)
 
 | round | keep=answer | keep=cot |
 |------:|------------:|---------:|
-| 0 | 27.6% | 29.2% |
-| 1 | 47.1% | 56.9% |
-| 2 | 64.4% | 78.3% |
-| 3 | 81.9% | 88.7% |
-| 4 | 88.8% | 92.1% |
-| 5 | 90.7% | 92.9% |
-| 6 | 92.3% | 93.5% |
+| 0 | 6.5% | 6.5% |
+| 1 | 9.9% | 10.7% |
+| 2 | 18.2% | 19.1% |
+| 3 | 32.3% | 35.8% |
+| 4 | 46.4% | 46.8% |
+| 5 | 54.6% | 50.1% |
+| 6 | 58.2% | 57.2% |
 
-Accepting only fully carry-correct chains (scarcer but higher quality) is, if
-anything, slightly *better* here — the strict signal is worth its cost when the
-task has a verifiable full trace.
+Accepting only fully carry-correct chains (scarcer but higher quality) finishes at 57.2%
+against 58.2% for the answer-only filter — -1.0 pts, which is within the 32.7-pt seed-to-seed spread, so the strict filter costs nothing
+when the task has a verifiable full trace.
 
-### Draft temperature ablation (answer accuracy at final round, 2-seed subset)
+### Draft temperature ablation (answer accuracy at final round)
 
-| temperature | final answer acc |
-|------------:|-----------------:|
-| 0.7 | 96.4% |
-| 1.0 | 91.5% |
-| 1.3 | 93.4% |
+| temperature | final answer acc | seed std |
+|------------:|-----------------:|---------:|
+| 0.7 | 53.7% | 0.330 |
+| 1.0 | 58.2% | 0.327 |
+| 1.3 | 57.5% | 0.334 |
 
-Run on a 2-seed subset, so the `1.0` row reads a little differently from the
-3-seed main curve. Lower-temperature drafts win once the model is competent (less
-diversity needed to find a correct chain), but all three land near ceiling.
+Run on the same seeds as the headline (0/1/2), so its `1.0` row *is* the main curve; a test
+asserts that identity against `main.per_seed` in the JSON, which is only true because every
+run initialises from its own seed rather than from wherever the script had got to.
+Final accuracy ranges from 53.7% (T=0.7) to 58.2% (T=1.0), a 4.5-pt spread.
+That sits inside the 33.0-pt mean seed-to-seed std of these rows, so this study does not
+resolve the draft temperature: every setting bootstraps a curve of the same shape.
+
+### Gold-seed sweep (nested seed sets, 3 rounds, mean over 3 seeds)
+
+| gold seed examples | round-0 acc | acc after 3 rounds | std | seeds past 80% |
+|-------------------:|------------:|--------------------------------:|----:|-----------------:|
+| 30 | 1.2% | 1.4% | 0.004 | 0/3 |
+| 60 | 2.0% | 2.4% | 0.007 | 0/3 |
+| 120 | 1.9% | 2.8% | 0.002 | 0/3 |
+| 240 | 6.5% | 32.3% | 0.210 | 0/3 |
+| 480 | 72.9% | 99.2% | 0.007 | 3/3 |
+
+Every row trains on a *prefix* of the same gold seed and is scored on the same held-out set,
+so the only thing that changes down the table is how much verified supervision the loop starts with.
+The 240-seed row is the headline curve cut short at 3 rounds — a test asserts
+that identity cell for cell, which also proves the sweep was not run on different data.
+No seed reaches 80% in 3 rounds at 240 gold examples or fewer; from 480 up at least one does. That is the threshold this repo
+trains at (240), and it is a *soft* one: mean accuracy still climbs from 1.4% to
+99.2% across the sweep, so a smaller seed buys a coin-flip rather than
+a guaranteed failure.
+The largest step is the 480-gold row, +66.9 pts over the row before it.
 <!-- RESULTS:END -->
 
 ## What the numbers say
 
 - **Self-improvement is real, not just extra compute.** STaR's held-out answer
-  accuracy climbs 27.6% → 92.3% over six rounds, while the matched-compute control
-  — same seed, same gradient steps — only creeps to 51.8%. The gap is the
+  accuracy climbs 6.5% → 58.2% over six rounds, while the matched-compute control
+  — same seed, same gradient steps — only reaches 10.5%. The gap is the
   self-generated verified data, not training length.
-- **A bootstrap threshold exists.** Below roughly 240 seed examples the model never
-  learns the carry algorithm, so it self-generates almost nothing correct and STaR
-  stays flat; at/above it the loop takes off. That cliff — not a smooth dial — is an
-  honest, reproducible property of STaR-style methods.
-- **`answer` vs `cot` keep-criteria** track each other closely here (a correct sum
-  almost always has a correct chain in base-10 addition), but `cot` is scarcer.
+- **The mean hides two outcomes.** Seed 2 finishes at 90.9% and seed 1 at 70.1%,
+  but seed 0 ends at 13.6% — six rounds barely lift it off its baseline. The std
+  column grows from 0.03 to 0.33 because the loop *amplifies* the small round-0
+  differences (2.9% / 6.4% / 10.2%) instead of averaging them out.
+- **A seed-size threshold exists, and it is soft.** Sweeping the gold seed over
+  nested prefixes (same pool, same eval set) keeps the curve flat at 30/60/120
+  examples — 1.4% to 2.8% after three rounds — reaches 32.3% ± 21.0 at 240, and
+  99.2% ± 0.7 at 480 on that same three-round budget. Below the threshold the
+  model cannot generate enough verified chains to train on, so the loop idles; at
+  the published 240 it is a coin-flip between seeds, which is exactly why the
+  per-seed table is part of the result.
+- **`answer` vs `cot` keep-criteria** end 1.0 pt apart (58.2% vs 57.2%), well
+  inside the seed-to-seed spread: with an exact verifier, demanding a fully
+  correct chain costs almost nothing.
+- **This headline is a correction.** An earlier version of this README reported
+  27.6% → 92.3%. That run built each seed's model *after* the previous seed had
+  already trained, so the initialisation stream depended on the order the seeds
+  were executed in, and the printed mean was not the average of three independent
+  runs. Every run now re-seeds from its own `seed`, and the honest number is the
+  one above. The temperature ablation is a useful check on the fix: its `1.0` row
+  reproduces the main curve cell for cell, and a test asserts that.
 
 ## Layout
 
@@ -155,7 +226,8 @@ src/starlab/
   data.py     the addition task + exact verifier (the reward)
   model.py    ~103k-param causal transformer, SFT loss, temperature sampling
   train.py    sft / sft_pairs / evaluate (accuracy on generated chains)
-  star.py     the STaR loop and disjoint seed/pool/eval splits
+  star.py     the STaR loop; disjoint seed/pool/eval splits, with the seed-set
+              sweep drawn as nested prefixes of one published split
   cli.py      `starlab quick|study`
 experiments/
   run_study.py    multi-seed study + control + ablations -> results/star.json
@@ -171,9 +243,14 @@ results/star.json committed, reproducible results
   a few rounds. This matches the broader literature finding that self-training gains
   are front-loaded ([Quiet-STaR](https://arxiv.org/abs/2403.09629) reports a second
   round adds little).
-- **Seed variance is genuine.** Different seeds start at very different baseline
-  accuracy (e.g. ~12% vs ~57% at 240 seeds); we report mean **and** std and do not
-  cherry-pick the prettiest run.
+- **Seed variance is genuine, and it can decide the result.** The three seeds start
+  at 2.9% / 6.4% / 10.2% and end six rounds later at 13.6% / 70.1% / 90.9% — one
+  seed in three never bootstraps. The mean, the std *and* the per-seed curve are all
+  in the artifact, and the README renders them rather than picking a run.
+- **Three seeds is three seeds.** With a 0.33 seed-to-seed std at the final round,
+  the 58.2% mean is a rough read on the method, not a tight one; more seeds would
+  move it, and the sweep row at 240 gold examples (32.3% ± 21.0) is the clearest
+  sign of how much of that spread is inherent.
 - **Clean-reward setting.** Arithmetic has an exact verifier. Real open-ended
   reasoning has no such oracle — [a learned verifier is the actual
   bottleneck](https://arxiv.org/abs/2505.22954) — so the conclusions here bound the
