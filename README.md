@@ -88,8 +88,8 @@ and PowerShell pass it through and leave the script to create `<drive>:\tmp`.
 curve is directly comparable with the tables below: `starlab quick --seed 2`
 prints 10.2% → 15.5% → 33.8% → 58.4% → 85.2% → 89.5% → 90.9%, which is the `seed 2`
 row of the per-seed table character for character. Beware which seed you pick: in
-this study **seed 0 is the run that never bootstraps** (2.9% → 13.6%). Both are real
-results, and the per-seed table shows all three.
+this study **seed 0 is the run that never gets going** (2.9% → 13.6%, the lowest ending
+score of the three). Both are real results, and the per-seed table shows all three.
 
 ## Results
 
@@ -254,8 +254,9 @@ results/star.json committed, reproducible results
   are front-loaded ([Quiet-STaR](https://arxiv.org/abs/2403.09629) reports a second
   round adds little).
 - **Seed variance is genuine, and it can decide the result.** The three seeds start
-  at 2.9% / 6.4% / 10.2% and end six rounds later at 13.6% / 70.1% / 90.9% — one
-  seed in three never bootstraps. The mean, the std *and* the per-seed curve are all
+  at 2.9% / 6.4% / 10.2% and end six rounds later at 13.6% / 70.1% / 90.9% — two of
+  the three never clear the 80% threshold the rendered table names, and one of those
+  never gets going at all. The mean, the std *and* the per-seed curve are all
   in the artifact, and the README renders them rather than picking a run.
 - **Three seeds is three seeds.** With a 0.33 seed-to-seed std at the final round,
   the 58.2% mean is a rough read on the method, not a tight one; more seeds would
