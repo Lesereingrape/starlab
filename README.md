@@ -11,7 +11,10 @@ these numbers come from (25 when other jobs shared the CPU). The artifact record
 environment (Python, torch, thread count), and two further runs inside it reproduced the
 committed file with **one** field differing each time — `runtime_sec` (1709s and then
 1514s against the published 914s, both while the machine was busy) — while every
-accuracy, curve and count came out identical. CPU float reduction order depends
+accuracy, curve and count came out identical. Of those three runtimes only the last one
+is still in this repo: it is `runtime_sec` in `results/star.json`, and a test reads it
+back. The two scratch files were thrown away, so 1709 and 1514 are a log of runs, not
+numbers you can check. CPU float reduction order depends
 on the thread count and the torch build, so that caveat is part of what "bit-exact"
 means here. Every `±` in this file is the **population** standard deviation over the
 seeded runs (`statistics.pstdev`, divided by n), because these three seeds are the whole
@@ -73,12 +76,16 @@ starlab quick --seed 0                # one seed of the published experiment: sa
                                       # 240/1000/1000 split, same six rounds (~40s here)
 starlab study                         # full multi-seed study + control + ablations
 python experiments/run_study.py       # the same thing, writing results/star.json
-python experiments/run_study.py --out /tmp/again.json   # rerun to diff it field for field
+python experiments/run_study.py --out again-check.json   # rerun to diff it field for field
 python experiments/make_report.py --write   # rewrite the README tables from the JSON
 ```
 
-`quick` deliberately runs the *published* configuration rather than a smaller one, so
-its curve is directly comparable with the tables below: `starlab quick --seed 2`
+The rerun writes `again-check.json` in the working directory rather than a `/tmp/...` path:
+Git-Bash rewrites a `/tmp/...` argument into `%TEMP%` before the script sees it, while cmd
+and PowerShell pass it through and leave the script to create `<drive>:\tmp`.
+
+`quick` deliberately runs the *published* configuration rather than a smaller one, so its
+curve is directly comparable with the tables below: `starlab quick --seed 2`
 prints 10.2% → 15.5% → 33.8% → 58.4% → 85.2% → 89.5% → 90.9%, which is the `seed 2`
 row of the per-seed table character for character. Beware which seed you pick: in
 this study **seed 0 is the run that never bootstraps** (2.9% → 13.6%). Both are real

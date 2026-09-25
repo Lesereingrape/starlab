@@ -11,3 +11,6 @@ dist/
 # Local run artifacts (results/star.json is committed on purpose)
 *.pt
 *.pth
+
+# scratch rerun from the documented verification recipe
+again-check.json

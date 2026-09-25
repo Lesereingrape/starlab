@@ -58,3 +58,29 @@ def test_readme_names_the_std_convention_the_tables_use():
     assert re.search("population[^.]{0,60}standard\\s+deviation", readme), (
         "the README no longer states which standard-deviation convention its "
         "`+/-` columns use")
+
+
+def test_the_published_wall_clock_is_the_one_the_artifact_records():
+    """The rerun note names three runtimes; only the committed one is still checkable.
+
+    This README rounds to whole seconds, so the test rounds the same way rather than
+    asking the prose to carry a decimal it does not need.
+    """
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    named = re.findall(r"published\s+(\d+(?:\.\d+)?)s(?![\d])", readme)
+    assert named, "the rerun note no longer names the published runtime"
+    assert len(named) == 1, f"the README names the published runtime more than once: {named}"
+    artifact = json.loads((ROOT / "results" / "star.json").read_text(encoding="utf-8"))
+    assert abs(float(named[0]) - artifact["runtime_sec"]) <= 0.5, (
+        f"README says the published run took {named[0]}s, "
+        f"results/star.json records {artifact['runtime_sec']}s")
+
+
+def test_the_documented_rerun_writes_a_relative_scratch_file():
+    """`--out /tmp/...` is not one path across shells, so the recipe must not use it."""
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "--out /tmp/" not in readme, (
+        "the rerun recipe is back to a /tmp path; Git-Bash rewrites it before the script "
+        "sees it, so use a relative scratch file")
+    assert "--out again-check.json" in readme, (
+        "the rerun recipe no longer names the relative scratch file it documents")
