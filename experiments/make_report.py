@@ -68,7 +68,7 @@ def build(data: dict) -> str:
     per_seed = main["per_seed"]
     out.append("### The same curve, seed by seed\n")
     out.append("| seed | " + " | ".join(f"round {row['round']}" for row in curve) + " |")
-    out.append("|-----:|" + "-------:" * len(curve) + "|")
+    out.append("|-----:|" + "|".join(["-------:"] * len(curve)) + "|")
     for s in sorted(per_seed, key=int):
         cells = " | ".join(_pct(v) for v in per_seed[s])
         out.append(f"| {s} | {cells} |")
