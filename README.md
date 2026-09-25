@@ -7,10 +7,11 @@ ones a verifier proves correct, and fine-tuning on them** — round after round.
 No GPU, no
 API keys, no downloaded weights. Every number in this README is produced by
 `python experiments/run_study.py`, which took 15-18 minutes on the 8-thread laptop
-these numbers come from. The artifact records that environment (Python, torch,
-thread count), and a second run inside it reproduced the committed file with **one**
-field differing — `runtime_sec`, 914s vs 1709s, because the machine was busy — while
-every accuracy, curve and count came out identical. CPU float reduction order depends
+these numbers come from (25 when other jobs shared the CPU). The artifact records that
+environment (Python, torch, thread count), and two further runs inside it reproduced the
+committed file with **one** field differing each time — `runtime_sec` (1709s and then
+1514s against the published 914s, both while the machine was busy) — while every
+accuracy, curve and count came out identical. CPU float reduction order depends
 on the thread count and the torch build, so that caveat is part of what "bit-exact"
 means here.
 
